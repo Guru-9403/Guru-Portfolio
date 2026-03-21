@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLAMES Love Game</title>
+
+<!-- AUDIO -->
+<!-- ENGLISH -->
+<audio id="L_en" src="songs/en/Ed Sheeran - PerfectG.mp3"></audio>
+<audio id="F_en" src="songs/en/Marshmello _ FriendG.mp3"></audio>
+<audio id="A_en" src="songs/en/Said The Sky _ AffectionG.mp3"></audio>
+<audio id="M_en" src="songs/en/Alex Warren - Ordinary G.mp3"></audio>
+<audio id="E_en" src="songs/en/Imagine Dragons - EnemyG.mp3"></audio>
+<audio id="S_en" src="songs/en/sister songG.mp3"></audio>
+<!-- TAMIL -->
+<audio id="L_ta" src="songs/tam/Theethiriyaai Love G.mp3"></audio>
+<audio id="F_ta" src="songs/tam/Friendship song G.mp3"></audio>
+<audio id="A_ta" src="songs/tam/Ambikapathy - Love song .mp3"></audio>
+<audio id="M_ta" src="songs/tam/Malaiyur  Merriage song.mp3"></audio>
+<audio id="E_ta" src="songs/tam/Prayer  Enemy Song .mp3"></audio>
+<audio id="S_ta" src="songs/tam/Kannil Anbai Sister G.mp3"></audio>
+<!-- HINDI -->
+<audio id="L_hi" src="songs/hi/love.mp3"></audio>
+<audio id="F_hi" src="songs/hi/friend.mp3"></audio>
+<audio id="A_hi" src="songs/hi/affection.mp3"></audio>
+<audio id="M_hi" src="songs/hi/marriage.mp3"></audio>
+<audio id="E_hi" src="songs/hi/enemy.mp3"></audio>
+<audio id="S_hi" src="songs/hi/sister.mp3"></audio>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+
+html,body{
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#ff5f7e,#ff9a9e);
+  min-height:100vh;
+  min-height:100dvh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  padding:16px;
+  transition:background 0.8s ease;
+}
+
+.theme-love    {background:linear-gradient(135deg,#ff4b6e,#ff758c)!important;}
+.theme-friend  {background:linear-gradient(135deg,#36d1dc,#5b86e5)!important;}
+.theme-affection{background:linear-gradient(135deg,#ff9a9e,#fad0c4)!important;}
+.theme-marriage{background:linear-gradient(135deg,#f7971e,#ffd200)!important;}
+.theme-enemy   {background:linear-gradient(135deg,#232526,#ff416c)!important;}
+.theme-sister  {background:linear-gradient(135deg,#a18cd1,#fbc2eb)!important;}
+
+.heart{position:fixed;pointer-events:none;z-index:0;font-size:16px;line-height:1;}
+.heart-blast{position:fixed;pointer-events:none;z-index:0;font-size:10px;line-height:1;}
+
+#share-btn{
+  position:absolute;
+  top:14px; right:14px;
+  width:38px; height:38px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.25);
+  border:1.5px solid rgba(255,255,255,0.5);
+  color:white;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  transition:background 0.2s, transform 0.2s;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  padding:0;
+  z-index:10;
+}
+#share-btn svg{ width:17px; height:17px; }
+#share-btn:hover{ background:rgba(255,255,255,0.45); transform:scale(1.1); }
+#share-btn:active{ transform:scale(0.95); }
+
+#share-toast{
+  position:fixed;
+  bottom:30px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:rgba(0,0,0,0.7);
+  color:white;
+  font-family:'Poppins',sans-serif;
+  font-size:13px; font-weight:600;
+  padding:10px 22px;
+  border-radius:30px;
+  opacity:0;
+  transition:opacity 0.3s, transform 0.3s;
+  pointer-events:none;
+  z-index:99;
+  white-space:nowrap;
+}
+#share-toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+.card{
+  background:transparent;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  padding:clamp(20px,5vw,32px) clamp(16px,5vw,28px);
+  border-radius:40px;
+  box-shadow:none;
+  border:2px solid rgba(255,255,255,0.5);
+  width:100%;
+  max-width:400px;
+  text-align:center;
+  position:relative;
+  z-index:3;
+}
+
+.card h1{font-size:clamp(22px,6vw,30px);color:white;font-weight:800;margin-bottom:clamp(10px,3vw,16px);letter-spacing:1px;}
+
+.lang-btn{
+  background:rgba(255,255,255,0.25);color:white;border:none;
+  padding:clamp(6px,2vw,10px) clamp(12px,3vw,18px);
+  border-radius:10px;cursor:pointer;font-family:'Poppins',sans-serif;
+  font-size:clamp(12px,3vw,14px);font-weight:600;transition:all 0.2s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.lang-btn.active-lang{background:white;color:#ff4b6e;transform:scale(1.05);}
+
+input{
+  width:100%;padding:clamp(10px,3vw,14px) clamp(12px,4vw,18px);
+  border-radius:14px;border:none;outline:none;
+  font-family:'Poppins',sans-serif;font-size:clamp(13px,3.5vw,15px);
+  background:rgba(255,255,255,0.85);margin-bottom:10px;
+  transition:background 0.2s;-webkit-appearance:none;
+}
+input:focus{background:white;}
+
+#play{
+  background:linear-gradient(135deg,#ff4b6e,#ff758c);color:white;border:none;
+  padding:clamp(11px,3vw,14px) 0;border-radius:14px;width:100%;
+  font-family:'Poppins',sans-serif;font-size:clamp(14px,4vw,16px);
+  font-weight:700;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;
+  box-shadow:0 4px 15px rgba(255,75,110,0.4);letter-spacing:0.5px;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+#play:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,75,110,0.5);}
+#play:active{transform:scale(0.97);}
+#play:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+#countdown-strip{margin-top:16px;padding:12px 8px;background:rgba(255,255,255,0.15);border-radius:40px;display:none;}
+
+#tiles-row{display:flex;justify-content:center;gap:clamp(5px,2vw,10px);flex-wrap:wrap;align-items:center;padding:4px 0;}
+
+.tile{
+  width:clamp(40px,10vw,52px);height:clamp(36px,9vw,48px);
+  position:relative;display:flex;align-items:center;justify-content:center;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.35s,filter 0.35s;
+  flex-shrink:0;
+}
+.tile svg.heart-svg{position:absolute;top:0;left:0;width:100%;height:100%;}
+.tile .tile-letter{
+  position:relative;z-index:2;font-size:clamp(12px,3vw,15px);font-weight:800;
+  color:white;line-height:1;margin-top:clamp(3px,1vw,6px);pointer-events:none;
+  text-shadow:0 1px 3px rgba(0,0,0,0.25);transition:color 0.3s,font-size 0.5s;
+}
+
+.heart-left,.heart-right{fill:#ff6b8a;transition:fill 0.4s;}
+.crack-line{opacity:0;stroke:#8b0030;stroke-width:2px;stroke-dasharray:50;stroke-dashoffset:50;fill:none;filter:drop-shadow(0 0 2px #ff003c);}
+
+.tile.counting{transform:scale(1.28) translateY(-5px);z-index:3;filter:drop-shadow(0 6px 14px rgba(255,30,100,0.75));}
+.tile.counting .heart-left,.tile.counting .heart-right{fill:#ff1f6e;}
+.tile.counting .tile-letter{color:white;}
+
+.tile.eliminated{opacity:0.6;transform:scale(0.82);}
+.tile.eliminated .heart-left,.tile.eliminated .heart-right{fill:#9b0035;}
+.tile.eliminated .heart-left{animation:breakLeft 0.55s cubic-bezier(0.22,1.4,0.5,1) forwards;}
+.tile.eliminated .heart-right{animation:breakRight 0.55s cubic-bezier(0.22,1.4,0.5,1) forwards;}
+.tile.eliminated .crack-line{animation:crackAppear 0.35s 0.05s ease forwards;}
+.tile.eliminated .tile-letter{color:rgba(255,255,255,0.3);}
+
+@keyframes breakLeft{0%{transform:translate(0,0) rotate(0deg)}30%{transform:translate(-3px,-2px) rotate(-6deg)}100%{transform:translate(-8px,3px) rotate(-18deg)}}
+@keyframes breakRight{0%{transform:translate(0,0) rotate(0deg)}30%{transform:translate(3px,-2px) rotate(6deg)}100%{transform:translate(8px,3px) rotate(18deg)}}
+@keyframes crackAppear{0%{opacity:0;stroke-dashoffset:50}60%{opacity:1;stroke-dashoffset:10}100%{opacity:1;stroke-dashoffset:0}}
+
+/* WINNER REVEAL */
+.tile.hide-tile{display:none!important;}
+
+#tiles-row.reveal-mode{justify-content:center;align-items:center;min-height:clamp(120px,35vw,180px);}
+
+#tiles-row.reveal-mode .tile:not(.hide-tile){
+  width:clamp(100px,30vw,140px);height:clamp(92px,27vw,128px);
+  transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1),height 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+#tiles-row.reveal-mode .tile:not(.hide-tile) .tile-letter{
+  font-size:clamp(26px,8vw,38px);margin-top:clamp(8px,3vw,14px);
+}
+
+.tile.building{animation:buildPulse 0.45s infinite alternate;}
+@keyframes buildPulse{0%{transform:scale(1);filter:drop-shadow(0 0 10px rgba(255,30,80,0.5))}100%{transform:scale(1.12);filter:drop-shadow(0 0 28px rgba(255,30,80,1))}}
+
+.tile.reveal-pop{animation:revealPop 0.65s cubic-bezier(0.22,1.5,0.36,1) forwards!important;}
+@keyframes revealPop{
+  0%  {transform:scale(0.1);opacity:0.3;filter:drop-shadow(0 0 0px rgba(255,30,80,0));}
+  60% {transform:scale(1.25);opacity:1;filter:drop-shadow(0 0 30px rgba(255,30,80,1));}
+  80% {transform:scale(0.95);}
+  100%{transform:scale(1);filter:drop-shadow(0 0 18px rgba(255,30,80,0.7));}
+}
+
+.tile.final-beat{animation:finalBeat 0.85s infinite!important;}
+@keyframes finalBeat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 10px rgba(255,30,80,0.5))}35%{transform:scale(1.15);filter:drop-shadow(0 0 30px rgba(255,30,80,1))}65%{transform:scale(1.07);filter:drop-shadow(0 0 18px rgba(255,30,80,0.7))}}
+
+.result-box{font-size:clamp(18px,5vw,26px);font-weight:800;color:white;margin-top:14px;min-height:32px;letter-spacing:0.5px;text-shadow:0 2px 8px rgba(0,0,0,0.15);transition:all 0.4s;}
+.result-box.show{animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes popIn{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1}}
+
+/* SMALL PHONES */
+@media(max-width:360px){
+  .card{padding:18px 14px;border-radius:20px;}
+  .tile{width:36px;height:33px;}
+  .tile .tile-letter{font-size:11px;margin-top:3px;}
+  #tiles-row{gap:5px;}
+}
+
+/* LANDSCAPE MOBILE */
+@media(max-height:500px) and (orientation:landscape){
+  body{align-items:flex-start;padding:8px 16px;}
+  .card{padding:12px 18px;max-width:520px;}
+  .card h1{font-size:18px;margin-bottom:6px;}
+  input{padding:8px 12px;margin-bottom:6px;}
+  #play{padding:8px 0;}
+  .tile{width:36px;height:33px;}
+  #tiles-row{gap:6px;}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="hearts-canvas" style="position:fixed;top:0;left:0;pointer-events:none;z-index:1;"></canvas>
+<div id="share-toast"></div>
+
+<div class="card">
+
+  <!-- SHARE BUTTON -->
+  <button id="share-btn" title="Share">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+    </svg>
+  </button>
+
+  <h1 style="font-size:28px;color:white;font-weight:800;margin-bottom:14px;letter-spacing:1px;">❤️ FLAMES</h1>
+
+  <!-- LANGUAGE BUTTONS -->
+  <div style="display:flex;gap:8px;justify-content:center;margin-bottom:14px;">
+    <button class="lang-btn" data-lang="english">EN</button>
+    <button class="lang-btn" data-lang="tamil">TA</button>
+    <button class="lang-btn" data-lang="hindi">HI</button>
+  </div>
+
+  <input id="name1" placeholder="Your Name">
+  <input id="name2" placeholder="Partner Name">
+
+  <button id="play">Check Love ❤️</button>
+
+  <p id="notify" style="color:#ffe44d;margin-top:8px;font-size:13px;display:none;">⚠ Please enter both names</p>
+
+  <!-- ====== COUNTDOWN STRIP ====== -->
+  <div id="countdown-strip">
+    <div id="tiles-row"></div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+
+</div>
+
+<script>
+let selectedLang = "english";
+
+$(".lang-btn").click(function(){
+  $(".lang-btn").removeClass("active-lang");
+  $(this).addClass("active-lang");
+  selectedLang = $(this).data("lang");
+});
+$(".lang-btn[data-lang='english']").addClass("active-lang");
+
+function stopAllSongs(){
+  $("audio").each(function(){ this.pause(); this.currentTime=0; });
+}
+function playFlamesSong(letter){
+  const lc = {english:"en", tamil:"ta", hindi:"hi"};
+  stopAllSongs();
+  const audio = document.getElementById(letter+"_"+lc[selectedLang]);
+  if(audio) audio.play();
+}
+
+const meaning={F:"Friends 🤝",L:"Love ❤️",A:"Affection 🥰",M:"Marriage 💍",E:"Enemy 😡",S:"Sister 👧"};
+const themeMap={F:"theme-friend",L:"theme-love",A:"theme-affection",M:"theme-marriage",E:"theme-enemy",S:"theme-sister"};
+const colorMap={L:"love",F:"friend",A:"affection",M:"marriage",E:"enemy",S:"sister"};
+
+// ---- SPEED CONTROLS ----
+const TICK_DELAY   = 180;  // ms per tile highlight
+const ELIM_PAUSE   = 500;  // ms after elimination before next round
+const RESULT_PAUSE = 600;  // ms before showing text result
+
+$("#play").click(function(){
+  let n1 = $("#name1").val().trim();
+  let n2 = $("#name2").val().trim();
+  if(!n1 || !n2){ $("#notify").show(); return; }
+  $("#notify").hide();
+
+  // reset
+  $("#result").text("").removeClass("show love friend affection marriage enemy sister");
+  $("#tiles-row").removeClass("reveal-mode");
+  $(".tile").removeClass("hide-tile building reveal-pop final-beat");
+  $("#play").prop("disabled", true);
+  stopAllSongs();
+
+  // compute count
+  let a1 = n1.toLowerCase().replace(/\s/g,"").split("");
+  let a2 = n2.toLowerCase().replace(/\s/g,"").split("");
+  for(let i=0;i<a1.length;i++){
+    let idx = a2.indexOf(a1[i]);
+    if(idx !== -1){ a1[i]=''; a2[idx]=''; }
+  }
+  const count = (a1.join("")+a2.join("")).length;
+
+  // show strip
+  $("#countdown-strip").show();
+
+  // build tiles
+  const LETTERS = ['F','L','A','M','E','S'];
+  let flames = [...LETTERS];
+  const $row = $("#tiles-row").empty();
+  LETTERS.forEach(l => $row.append(`
+    <div class="tile" id="tile-${l}">
+      <svg class="heart-svg" viewBox="0 0 104 90" xmlns="http://www.w3.org/2000/svg">
+        <!-- left half of heart -->
+        <clipPath id="cp-left-${l}">
+          <rect x="0" y="0" width="52" height="90"/>
+        </clipPath>
+        <!-- right half of heart -->
+        <clipPath id="cp-right-${l}">
+          <rect x="52" y="0" width="52" height="90"/>
+        </clipPath>
+        <!-- full heart path clipped to left -->
+        <g clip-path="url(#cp-left-${l})">
+          <path class="heart-left" d="M52 80 C52 80 4 50 4 26 C4 12 14 4 26 4 C36 4 44 10 52 20 C60 10 68 4 78 4 C90 4 100 12 100 26 C100 50 52 80 52 80Z"/>
+        </g>
+        <!-- full heart path clipped to right -->
+        <g clip-path="url(#cp-right-${l})">
+          <path class="heart-right" d="M52 80 C52 80 4 50 4 26 C4 12 14 4 26 4 C36 4 44 10 52 20 C60 10 68 4 78 4 C90 4 100 12 100 26 C100 50 52 80 52 80Z"/>
+        </g>
+        <!-- crack line down the middle -->
+        <polyline class="crack-line" points="52,4 50,22 54,38 50,55 52,80"/>
+      </svg>
+      <span class="tile-letter">${l}</span>
+    </div>
+  `));
+
+  let globalStep = 0;
+
+  // ---- animate countdown ----
+  function animateRound(currentIndex, stepCallback){
+    // we count 'count' steps from currentIndex, each step highlights a tile
+    let step = 0;
+    let idx = currentIndex;
+
+    function tick(){
+      // unhighlight previous
+      const prevLetter = flames[(idx + flames.length - 1) % flames.length]; // not always right, use tracked
+      $(".tile").removeClass("counting");
+
+      const letter = flames[idx % flames.length];
+      idx = idx % flames.length;
+      globalStep++;
+
+      $(`#tile-${letter}`).addClass("counting");
+
+      step++;
+      if(step < count){
+        idx = (idx + 1) % flames.length;
+        setTimeout(tick, TICK_DELAY);
+      } else {
+        // eliminate this tile after a brief pause
+        setTimeout(()=>{
+          $(".tile").removeClass("counting");
+          $(`#tile-${letter}`).addClass("eliminated");
+          flames.splice(idx, 1);
+
+          if(flames.length === 1){
+            // winner!
+            setTimeout(()=>{ stepCallback(idx, true, letter); }, ELIM_PAUSE);
+          } else {
+            // next round starts from same index (now pointing to next letter)
+            const nextIdx = idx % flames.length;
+            setTimeout(()=>{ stepCallback(nextIdx, false, letter); }, ELIM_PAUSE);
+          }
+        }, TICK_DELAY * 1.5);
+      }
+    }
+    tick();
+  }
+
+  function runRound(startIdx, done){
+    if(done) return;
+    animateRound(startIdx, function(nextIdx, finished){
+      if(finished){
+        showResult();
+      } else {
+        runRound(nextIdx, false);
+      }
+    });
+  }
+
+  function showResult(){
+    const final = flames[0];
+    $(".tile").removeClass("counting");
+
+    // 1. hide all other tiles
+    $(".tile").not("#tile-"+final).addClass("hide-tile");
+
+    setTimeout(()=>{
+      $("#tiles-row").addClass("reveal-mode");
+
+      const $winner = $("#tile-"+final);
+      $winner.removeClass("eliminated winner");
+      $winner.find(".heart-left, .heart-right").css("fill","#ff1f6e");
+
+      // 2. start tiny and pulse for 2s
+      $winner.css({transform:"scale(0.15)", opacity:"0.4", transition:"none"});
+      $winner.addClass("building");
+
+      // 3. after 2s — zoom pop reveal
+      setTimeout(()=>{
+        $winner.removeClass("building");
+        $winner.css({transform:"", opacity:"", transition:""});
+        $winner.addClass("reveal-pop");
+
+        setTimeout(()=>{
+          $winner.removeClass("reveal-pop").addClass("final-beat");
+          $("#result").text(meaning[final]).addClass("show");
+          playFlamesSong(final);
+          if(window.fireSkyshots) window.fireSkyshots();
+          $("#play").prop("disabled", false);
+        }, 700);
+
+      }, 2000);
+
+    }, 100);
+  }
+
+  // kick off
+  runRound(0, false);
+});
+
+/* ====== SHARE BUTTON — HASH LINK (works without server) ====== */
+
+// on page load: check URL hash and auto-fill + auto-play
+(function(){
+  const hash = window.location.hash.slice(1);
+  if(!hash) return;
+  try{
+    const data = JSON.parse(atob(hash));
+    if(data.n1) document.getElementById("name1").value = data.n1;
+    if(data.n2) document.getElementById("name2").value = data.n2;
+    if(data.lang){
+      $(".lang-btn").removeClass("active-lang");
+      $(`.lang-btn[data-lang="${data.lang}"]`).addClass("active-lang");
+      selectedLang = data.lang;
+    }
+    if(data.n1 && data.n2){
+      setTimeout(()=> document.getElementById("play").click(), 700);
+    }
+  }catch(e){}
+})();
+
+document.getElementById("share-btn").addEventListener("click", function(){
+  const n1    = document.getElementById("name1").value.trim();
+  const n2    = document.getElementById("name2").value.trim();
+  const toast = document.getElementById("share-toast");
+
+  function showToast(msg){
+    toast.innerText = msg;
+    toast.classList.add("show");
+    setTimeout(()=> toast.classList.remove("show"), 2800);
+  }
+
+  if(!n1 || !n2){ showToast("⚠️ Enter both names first!"); return; }
+
+  // encode names into base64 hash
+  const hash    = btoa(JSON.stringify({ n1, n2, lang: selectedLang }));
+  const liveUrl = window.location.href.split("#")[0] + "#" + hash;
+  const shareText = `💘 ${n1} + ${n2} — What does FLAMES say about us?\nFind out 👉 ${liveUrl}`;
+
+  if(navigator.share){
+    navigator.share({ title:"FLAMES 💘", text: shareText, url: liveUrl }).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(liveUrl)
+      .then(()=> showToast("✅ Link copied! Send to your partner 💕"))
+      .catch(()=>{ showToast("🔗 Copy this: " + liveUrl); });
+  } else {
+    showToast("✅ Share: " + liveUrl);
+  }
+});
+window.addEventListener("load", function(){
+  const canvas = document.getElementById("hearts-canvas");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+
+  function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+  resize();
+  window.addEventListener("resize", resize);
+
+  const COLORS = ["#ff6b9d","#ff1f6e","#ffb3cc","#ffffff","#ff85c0","#ff4d7d","#ffd6e8"];
+
+  /* ---- 10 FLOATING HEARTS ---- */
+  function makeFloat(){
+    return {
+      x    : Math.random() * canvas.width,
+      y    : canvas.height + 20,
+      vy   : -(0.6 + Math.random() * 1.2),
+      vx   : (Math.random() - 0.5) * 0.5,
+      size : 10 + Math.random() * 12,
+      alpha: 0.4 + Math.random() * 0.5,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      sway : Math.random() * Math.PI * 2,
+      swaySpeed: 0.01 + Math.random() * 0.02
+    };
+  }
+  let floaters = Array.from({length:10}, ()=>{ const h=makeFloat(); h.y=Math.random()*canvas.height; return h; });
+
+  /* ---- 8 SKYSHOT ROCKETS — triggered on result only ---- */
+  function makeRocket(){
+    return {
+      x       : Math.random() * canvas.width,
+      y       : canvas.height + 20,
+      vx      : (Math.random() - 0.5) * 1.8,
+      vy      : -(8 + Math.random() * 5),
+      targetY : canvas.height * (0.08 + Math.random() * 0.35),
+      color   : COLORS[Math.floor(Math.random() * COLORS.length)],
+      size    : 16 + Math.random() * 8,
+      exploded: false,
+      done    : false,
+      particles: []
+    };
+  }
+  let rockets = [];
+
+  function explode(r){
+    r.exploded = true;
+    const n = 24 + Math.floor(Math.random() * 10);
+    for(let i=0;i<n;i++){
+      const angle = (Math.PI*2/n)*i + Math.random()*0.4;
+      const spd   = 2.5 + Math.random() * 4.5;
+      r.particles.push({
+        x:r.x, y:r.y,
+        vx:Math.cos(angle)*spd,
+        vy:Math.sin(angle)*spd - 1,
+        size :8 + Math.random()*8,
+        alpha:1,
+        decay:0.011 + Math.random()*0.011,
+        color:COLORS[Math.floor(Math.random()*COLORS.length)]
+      });
+    }
+  }
+
+  window.fireSkyshots = function(){
+    rockets = [];
+    for(let i=0;i<8;i++){
+      setTimeout(()=> rockets.push(makeRocket()), i * 220);
+    }
+  };
+
+  function loop(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    /* floaters */
+    while(floaters.length < 10) floaters.push(makeFloat());
+    floaters.forEach((h,i)=>{
+      h.sway += h.swaySpeed;
+      h.x += Math.sin(h.sway)*0.4 + h.vx;
+      h.y += h.vy;
+      if(h.y < -30){ floaters[i]=makeFloat(); return; }
+      ctx.globalAlpha = h.alpha;
+      ctx.fillStyle   = h.color;
+      ctx.font        = `${h.size}px serif`;
+      ctx.fillText("♥", h.x, h.y);
+    });
+
+    /* skyshots — no trail */
+    rockets = rockets.filter(r=>!r.done);
+    rockets.forEach(r=>{
+      if(!r.exploded){
+        r.x += r.vx; r.y += r.vy; r.vy += 0.1;
+        ctx.globalAlpha = 1;
+        ctx.fillStyle   = r.color;
+        ctx.font        = `${r.size}px serif`;
+        ctx.fillText("♥", r.x - r.size*0.5, r.y + r.size*0.5);
+        if(r.y <= r.targetY) explode(r);
+      } else {
+        let alive = false;
+        r.particles.forEach(p=>{
+          p.x+=p.vx; p.y+=p.vy; p.vy+=0.07; p.vx*=0.97;
+          p.alpha-=p.decay; p.size*=0.975;
+          if(p.alpha<=0) return;
+          alive = true;
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle   = p.color;
+          ctx.font        = `${Math.max(2,p.size)}px serif`;
+          ctx.fillText("♥", p.x-p.size*0.5, p.y+p.size*0.5);
+        });
+        if(!alive) r.done = true;
+      }
+    });
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+});
+</script>
+
+</body>
+</html>
