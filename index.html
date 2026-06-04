@@ -65,6 +65,46 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        /* --- Game Selection Modal (Pop-up) --- */
+.modal-overlay {
+    display: none;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(2, 2, 5, 0.85); backdrop-filter: blur(10px);
+    z-index: 99999; justify-content: center; align-items: center;
+    opacity: 0; transition: opacity 0.3s ease;
+}
+.modal-overlay.show { display: flex; opacity: 1; }
+
+.modal-content {
+    background: var(--card-bg); border: 1px solid rgba(249,115,22,0.4);
+    border-radius: 20px; padding: 2.5rem; text-align: center;
+    position: relative; max-width: 400px; width: 90%;
+    transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 15px 40px rgba(249,115,22,0.2);
+}
+.modal-overlay.show .modal-content { transform: scale(1); }
+
+.close-modal {
+    position: absolute; top: 15px; right: 20px; font-size: 1.8rem;
+    color: var(--text-sub); cursor: pointer; transition: 0.3s;
+}
+.close-modal:hover { color: #f97316; transform: scale(1.1); }
+
+.modal-content h3 { margin-bottom: 1.5rem; color: #f97316; font-weight: 800; font-size: 1.5rem; }
+.game-options { display: flex; flex-direction: column; gap: 1rem; }
+
+.game-btn {
+    padding: 15px; border-radius: 12px; font-weight: 700; text-decoration: none;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(249,115,22,0.3);
+    color: var(--text-main); display: flex; align-items: center; justify-content: center;
+    gap: 10px; transition: 0.3s; font-size: 1rem;
+}
+.game-btn i { font-size: 1.2rem; }
+.game-btn:hover {
+    background: linear-gradient(135deg, #f97316, #ea580c); color: #fff;
+    box-shadow: 0 8px 20px rgba(249,115,22,0.3); transform: translateY(-3px);
+}
+
         /* STRICT MOBILE OVERFLOW PREVENTION */
         html { 
             overscroll-behavior: none; 
@@ -213,6 +253,7 @@
         .delay-2 { transition-delay: 0.08s !important; }
         .delay-3 { transition-delay: 0.16s !important; }
         .delay-4 { transition-delay: 0.24s !important; }
+        .delay-5 { transition-delay: 0.32s !important; } /* Added 5th delay */
 
         /* --- Card Hovers (separate from reveal so they don't conflict) --- */
         .project-card { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease; }
@@ -496,6 +537,29 @@
         .project-card:nth-child(3):hover { border-color: #f79ad3; box-shadow: 0 15px 35px rgba(247,154,211,0.18); }
         .project-card:nth-child(4):hover { border-color: #10b981; box-shadow: 0 15px 35px rgba(16,185,129,0.18); }
 
+        /* --- 5th Project Card Styles (Game Card) --- */
+        .project-card:nth-child(5) { background: linear-gradient(135deg, rgba(249,115,22,0.08), rgba(249,115,22,0.02)); border-color: rgba(249,115,22,0.25); }
+        .project-card:nth-child(5) .project-img-icon { background: rgba(249,115,22,0.12); color: #f97316; }
+        .project-card:nth-child(5) .project-status { color: #f97316; background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.2); }
+        .project-card:nth-child(5) .status-dot { background: #f97316; }
+        .project-card:nth-child(5) .btn-demo { background: linear-gradient(135deg, #f97316, #ea580c); box-shadow: 0 8px 20px rgba(249,115,22,0.3); }
+        .project-card:nth-child(5) .btn-demo:hover { box-shadow: 0 12px 28px rgba(249,115,22,0.45); transform: translateY(-3px); }
+        .project-card:nth-child(5):hover { border-color: #f97316; box-shadow: 0 15px 35px rgba(249,115,22,0.18); }
+
+        /* Custom Game Animation */
+        @keyframes gamepadAnimate {
+            0% { transform: translateY(0) scale(1) rotate(0deg); }
+            20% { transform: translateY(-4px) scale(1.1) rotate(-10deg); }
+            40% { transform: translateY(-6px) scale(1.15) rotate(10deg); }
+            60% { transform: translateY(-4px) scale(1.1) rotate(-10deg); }
+            80% { transform: translateY(0) scale(1) rotate(0deg); }
+            100% { transform: translateY(0) scale(1) rotate(0deg); }
+        }
+        .project-card:nth-child(5) .project-img-icon i {
+            animation: gamepadAnimate 2.5s ease-in-out infinite;
+            display: inline-block;
+        }
+
         /* Skill Cards */
         .skill-card:nth-child(1) { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.01)); border-color: rgba(16,185,129,0.3); }
         .skill-card:nth-child(1) .skill-icon { color: #10b981; }
@@ -636,7 +700,7 @@
         <div class="home-img reveal delay-1">
             <div class="home-img-inner">
                 <div class="image-frame">
-                    <img src="As/guru.jpeg" alt="Guruprasath K Profile">
+                    <img src="guru.jpg" alt="Guruprasath K Profile">
                 </div>
                 
             </div>
@@ -760,6 +824,26 @@
                     <a href="https://musicplayer9403.netlify.app/" target="_self" class="btn-project btn-demo"><i class="fas fa-rocket"></i> Launch Site</a>
                 </div>
             </div>
+
+            <div class="project-card reveal-left delay-5">
+                <div class="project-status">
+                    <div class="status-dot"></div> Live Now
+                </div>
+                <div class="project-img-icon"><i class="fas fa-gamepad"></i></div>
+                <h3 class="project-name">Game Hub</h3>
+                <p>A fully responsive, interactive gaming experience built with modern browser technologies.</p><br>
+                <div style="margin-bottom: 2rem;">
+                    <span class="tech-pill">HTML5</span>
+                    <span class="tech-pill">CSS3</span>
+                    <span class="tech-pill">JavaScript</span>
+                    <span class="tech-pill">Netlify</span>
+                    
+                </div>
+                <div style="display: flex; gap: 1rem;">
+    <a href="javascript:void(0)" onclick="openGameModal()" class="btn-project btn-demo"><i class="fas fa-play"></i> Play Games</a>
+</div>
+            </div>
+            
         </div>
 
         <div style="text-align: center; margin-top: 3rem;" class="reveal delay-2">
@@ -881,35 +965,57 @@
     </section>
 
     <footer id="footer-trigger" title="Double tap to change cube border color">
+        <div id="gameModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeGameModal()">&times;</span>
+        <h3>Select a Game</h3>
+        <div class="game-options">
+            <a href="https://spaceasteroidshooter.netlify.app/" target="_blank" class="game-btn">
+                <i class="fas fa-space-shuttle"></i> <b>Asteroidshooter</b>
+            </a>
+            <a href="https://spacexsurvivor.netlify.app/" target="_blank" class="game-btn">
+                <i class="fas fa-space-shuttle"></i> <b>Spacexsurvivor</b>
+            </a>
+        </div>
+    </div>
+</div>
         <p>&copy; @ 2026 Guruprasath K. <i class="fas fa-bolt" style="color:var(--primary-color)"></i> for the modern web.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
 
     <script>
-        // --- INITIALIZE LENIS (Premium Smooth Scrolling) ---
-        const lenis = new Lenis({
-            duration: 0.7,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smoothTouch: false,
-            touchMultiplier: 2,
-        });
+        // --- SAFE LENIS INITIALIZATION (Added fallback so code doesn't break if blocked) ---
+        let lenis;
+        try {
+            if (typeof Lenis !== 'undefined') {
+                lenis = new Lenis({
+                    duration: 0.7,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    smoothTouch: false,
+                    touchMultiplier: 2,
+                });
 
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+            }
+        } catch (e) {
+            console.warn("Smooth scroll library failed to load, continuing with native scroll.");
         }
-        requestAnimationFrame(raf);
 
         document.querySelectorAll('nav a, a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const targetId = this.getAttribute('href');
                 if (targetId.startsWith('#') && targetId.length > 1) {
                     e.preventDefault();
-                    lenis.scrollTo(targetId, {
-                        offset: -80,
-                        duration: 0.8
-                    });
+                    if (lenis) {
+                        lenis.scrollTo(targetId, { offset: -80, duration: 0.8 });
+                    } else {
+                        document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+                    }
                     
                     document.getElementById('nav-menu').classList.remove('mobile-active');
                     document.querySelector('.hamburger i').className = 'fas fa-bars';
@@ -1014,7 +1120,6 @@
         let lastScrollY = window.scrollY;
         let scrollVelocity = 0;
 
-        // Throttle mousemove — only update target every 32ms (30fps cap for input)
         let mouseMoveThrottle = false;
         document.addEventListener('mousemove', (e) => {
             if (mouseMoveThrottle) return;
@@ -1042,7 +1147,6 @@
             currentTiltX += (targetTiltX - currentTiltX) * lerpFactor;
             currentTiltY += (targetTiltY - currentTiltY) * lerpFactor;
 
-            // Skip DOM write if values are essentially settled (saves GPU)
             const allSettled =
                 Math.abs(targetX - currentX) < 0.05 &&
                 Math.abs(targetY - currentY) < 0.05 &&
@@ -1052,7 +1156,7 @@
 
             if (allSettled) {
                 isMoving = false;
-                return; // stop rAF loop when nothing is moving
+                return; 
             }
 
             if (svgContainer) {
@@ -1064,8 +1168,8 @@
 
         animateParallax();
 
-        // Integrate scroll listener with Lenis instead of window.addEventListener
-        lenis.on('scroll', (e) => {
+        // Scroll listener fallback for Parallax & Header
+        function handleScroll() {
             currentScrollY = window.scrollY;
 
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -1081,9 +1185,11 @@
                 header.style.padding = "1rem 8%";
             }
 
-            // Restart parallax loop on scroll if it stopped
             if (!isMoving) { isMoving = true; animateParallax(); }
-        });
+        }
+
+        if (lenis) { lenis.on('scroll', handleScroll); } 
+        else { window.addEventListener('scroll', handleScroll); }
 
         // --- IntersectionObserver for Nav ---
         const navLinks = document.querySelectorAll('nav a');
@@ -1115,7 +1221,6 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const el = entry.target;
-                    // Force a reflow so the initial transform is painted before transition starts
                     el.getBoundingClientRect();
                     requestAnimationFrame(() => {
                         el.classList.add('show');
@@ -1205,12 +1310,11 @@
             type();
             drawGrid();
 
-            // Smoothly show elements already visible on load after a short paint delay
             setTimeout(() => {
                 allReveal.forEach(el => {
                     const rect = el.getBoundingClientRect();
                     if (rect.top < window.innerHeight && rect.bottom >= 0) {
-                        el.getBoundingClientRect(); // force reflow
+                        el.getBoundingClientRect(); 
                         requestAnimationFrame(() => {
                             el.classList.add('show');
                             const bar = el.querySelector('.progress-bar');
@@ -1249,7 +1353,6 @@
             root.style.setProperty('--particle-glow', theme.glow);
         }
 
-        // Support both dblclick (desktop) and double tap (mobile)
         let lastTap = 0;
         const logoEl = document.querySelector('.logo');
 
@@ -1355,12 +1458,14 @@
                 }
             }
 
-            setInterval(checkDevTools, 500);
+            // --- DEV TOOLS BLOCKER TEMPORARILY DISABLED FOR DEBUGGING ---
+            // If you want to block inspect element again later, remove the "//" from the line below:
+            // setInterval(checkDevTools, 500);
 
-            // Block right click
+            // Block right click (Currently Active)
             document.addEventListener('contextmenu', e => e.preventDefault());
 
-            // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+            // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U (Currently Active)
             document.addEventListener('keydown', e => {
                 if (
                     e.key === 'F12' ||
@@ -1373,6 +1478,29 @@
                 }
             });
         })();
+
+        // --- Game Modal Logic ---
+function openGameModal() {
+    const modal = document.getElementById('gameModal');
+    modal.style.display = 'flex';
+    // Small delay to allow CSS to register display:flex before adding opacity
+    setTimeout(() => modal.classList.add('show'), 10);
+}
+
+function closeGameModal() {
+    const modal = document.getElementById('gameModal');
+    modal.classList.remove('show');
+    // Wait for fade out animation to finish before hiding completely
+    setTimeout(() => modal.style.display = 'none', 300);
+}
+
+// Close the pop-up if the user clicks outside the box
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('gameModal');
+    if (event.target === modal) {
+        closeGameModal();
+    }
+});
     </script>
 </body>
 </html>
