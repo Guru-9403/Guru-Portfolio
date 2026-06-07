@@ -3,4 +3,6 @@
 ## DEMO LINK : https://guru-9403.github.io/Guru-Portfolio/
 
 
-hey..👋 this my portfolio😎 its like 3D model Bg and smooth UI & UX
+hey..👋 this is my portfolio😎 Created 3D background model 
+
+## developed by GURUPRASATH KANAGARAJ 
