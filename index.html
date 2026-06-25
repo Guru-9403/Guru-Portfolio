@@ -107,9 +107,8 @@
             box-shadow: 0 8px 20px rgba(249,115,22,0.3); transform: translateY(-3px);
         }
 
-        /* STRICT MOBILE OVERFLOW PREVENTION */
-        html, body { 
-            overscroll-behavior-y: none; /* Prevents pull-to-refresh bounce */
+        /* FIXED: REMOVED OVERSCROLL-BEHAVIOR DETACHMENT CRASHING MOBILE BROWSERS */
+        html {
             overflow-x: hidden;
             width: 100vw;
         }
@@ -117,13 +116,15 @@
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
+            overflow-x: hidden;
+            width: 100vw;
             position: relative;
             transition: background 0.15s ease, color 0.15s ease;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- Hide Scrollbar securely without breaking * performance --- */
+        /* --- Hide Scrollbar --- */
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
         html, body { scrollbar-width: none; -ms-overflow-style: none; }
 
@@ -183,7 +184,7 @@
             stroke-linejoin: round;
             transition: fill 0.4s ease; 
             shape-rendering: optimizeSpeed; 
-            transform: translateZ(0); /* Hardware Acceleration */
+            transform: translateZ(0); 
             fill: var(--glass-top);
         }
 
@@ -195,8 +196,8 @@
 
         .edge-breathe {
             stroke: var(--particle-dim);
-            stroke-width: 1.5px; /* Static stroke width */
-            will-change: opacity, stroke; /* Tells GPU to handle this smoothly */
+            stroke-width: 1.5px; 
+            will-change: opacity, stroke; 
         }
 
         /* --- Navigation --- */
@@ -243,7 +244,6 @@
         .reveal-left  { transform: translateX(-80px) scale(0.97); }
         .reveal-right { transform: translateX(80px)  scale(0.97); }
 
-        /* Animate IN - smooth spring easing */
         .reveal.show, .reveal-left.show, .reveal-right.show {
             opacity: 1;
             transform: translate(0, 0) scale(1);
@@ -257,10 +257,10 @@
         .delay-4 { transition-delay: 0.24s !important; }
         .delay-5 { transition-delay: 0.32s !important; } 
 
-        /* --- Card Hovers --- */
+        /* --- Card Styles --- */
         .project-card, .edu-card, .skill-card {
             background: var(--card-bg); 
-            backdrop-filter: blur(6px); /* Desktop Glassmorphism */
+            backdrop-filter: blur(6px); 
             border: 1px solid var(--border-color);
             transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
         }
@@ -291,7 +291,6 @@
         .home-content { z-index: 10; max-width: 600px; }
         .home-content h1 { font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; word-break: break-word; }
         
-        /* --- Animated Glassy Gradient Name --- */
         .home-content h1 span { 
             background: linear-gradient(
                 to right, 
@@ -309,18 +308,6 @@
                     drop-shadow(0 0 30px rgba(157, 80, 187, 0.2));
             animation: textFlow 4s ease-in-out infinite; 
             display: inline-block;
-        }
-
-        @keyframes textFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         .home-content h3 { font-size: clamp(1.1rem, 2.5vw, 2.2rem); margin: 1rem 0; font-weight: 600; color: var(--primary-color); min-height: 1.2em; }
@@ -348,9 +335,7 @@
         }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0, 210, 255, 0.4); }
 
-        /* ========================================= */
-        /* --- PROFESSIONAL 3D HERO IMAGE --- */
-        /* ========================================= */
+        /* --- Hero Image --- */
         .home-img { 
             position: relative; 
             width: clamp(260px, 30vw, 380px); 
@@ -416,7 +401,6 @@
             border-radius: 20px; font-size: 0.65rem; font-weight: 700; color: var(--primary-color); text-transform: uppercase;
         }
         .status-dot { width: 6px; height: 6px; background: var(--primary-color); border-radius: 50%; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
         .project-img-icon {
             width: 60px; height: 60px; background: rgba(0, 210, 255, 0.1); border-radius: 18px;
             display: flex; align-items: center; justify-content: center; color: var(--primary-color);
@@ -488,35 +472,29 @@
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        /* --- About Section Colors --- */
+        /* Colors */
         .info-card:nth-child(1) { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.02)); border-color: rgba(16,185,129,0.3); }
         .info-card:nth-child(1) .label { color: #10b981; }
-
         .info-card:nth-child(2) { background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.02)); border-color: rgba(239,68,68,0.3); }
         .info-card:nth-child(2) .label { color: #ef4444; }
-
         .stat-card:nth-child(1) { background: linear-gradient(135deg, rgba(234,179,8,0.1), rgba(234,179,8,0.02)); border-color: rgba(234,179,8,0.3); }
         .stat-card:nth-child(1) .number { background: linear-gradient(135deg, #eab308, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .stat-card:nth-child(1):hover { border-color: #eab308; box-shadow: 0 15px 35px rgba(234,179,8,0.2); }
-
         .stat-card:nth-child(2) { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.02)); border-color: rgba(16,185,129,0.3); }
         .stat-card:nth-child(2) .number { background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .stat-card:nth-child(2):hover { border-color: #10b981; box-shadow: 0 15px 35px rgba(16,185,129,0.2); }
 
-        /* Project Cards */
+        /* Project Grid Colors */
         .project-card:nth-child(1) { background: linear-gradient(135deg, rgba(0,210,255,0.08), rgba(0,210,255,0.02)); border-color: rgba(0,210,255,0.25); }
         .project-card:nth-child(1) .project-img-icon { background: rgba(0,210,255,0.12); color: #00d2ff; }
-
         .project-card:nth-child(2) { background: linear-gradient(135deg, rgba(157,80,187,0.1), rgba(157,80,187,0.02)); border-color: rgba(157,80,187,0.3); }
         .project-card:nth-child(2) .project-img-icon { background: rgba(157,80,187,0.12); color: #9d50bb; }
         .project-card:nth-child(2) .project-status { color: #9d50bb; background: rgba(157,80,187,0.08); border-color: rgba(157,80,187,0.2); }
         .project-card:nth-child(2) .status-dot { background: #9d50bb; }
-
         .project-card:nth-child(3) { background: linear-gradient(135deg, rgba(247,154,211,0.08), rgba(247,154,211,0.02)); border-color: rgba(247,154,211,0.25); }
         .project-card:nth-child(3) .project-img-icon { background: rgba(247,154,211,0.12); color: #f79ad3; }
         .project-card:nth-child(3) .project-status { color: #f79ad3; background: rgba(247,154,211,0.08); border-color: rgba(247,154,211,0.2); }
         .project-card:nth-child(3) .status-dot { background: #f79ad3; }
-
         .project-card:nth-child(4) { background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02)); border-color: rgba(16,185,129,0.25); }
         .project-card:nth-child(4) .project-img-icon { background: rgba(16,185,129,0.12); color: #10b981; }
         .project-card:nth-child(4) .project-status { color: #10b981; background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.2); }
@@ -527,59 +505,24 @@
         .project-card:nth-child(3) .btn-demo { background: linear-gradient(135deg, #f79ad3, #e040a0); box-shadow: 0 8px 20px rgba(247,154,211,0.3); }
         .project-card:nth-child(4) .btn-demo { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16,185,129,0.3); }
 
-        .project-card:nth-child(1) .btn-demo:hover { box-shadow: 0 12px 28px rgba(0,210,255,0.45); transform: translateY(-3px); }
-        .project-card:nth-child(2) .btn-demo:hover { box-shadow: 0 12px 28px rgba(157,80,187,0.45); transform: translateY(-3px); }
-        .project-card:nth-child(3) .btn-demo:hover { box-shadow: 0 12px 28px rgba(247,154,211,0.45); transform: translateY(-3px); }
-        .project-card:nth-child(4) .btn-demo:hover { box-shadow: 0 12px 28px rgba(16,185,129,0.45); transform: translateY(-3px); }
-        .project-card:nth-child(1):hover { border-color: #00d2ff; box-shadow: 0 15px 35px rgba(0,210,255,0.18); }
-        .project-card:nth-child(2):hover { border-color: #9d50bb; box-shadow: 0 15px 35px rgba(157,80,187,0.18); }
-        .project-card:nth-child(3):hover { border-color: #f79ad3; box-shadow: 0 15px 35px rgba(247,154,211,0.18); }
-        .project-card:nth-child(4):hover { border-color: #10b981; box-shadow: 0 15px 35px rgba(16,185,129,0.18); }
-
-        /* --- 5th Project Card Styles (Game Card) --- */
         .project-card:nth-child(5) { background: linear-gradient(135deg, rgba(249,115,22,0.08), rgba(249,115,22,0.02)); border-color: rgba(249,115,22,0.25); }
         .project-card:nth-child(5) .project-img-icon { background: rgba(249,115,22,0.12); color: #f97316; }
         .project-card:nth-child(5) .project-status { color: #f97316; background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.2); }
         .project-card:nth-child(5) .status-dot { background: #f97316; }
         .project-card:nth-child(5) .btn-demo { background: linear-gradient(135deg, #f97316, #ea580c); box-shadow: 0 8px 20px rgba(249,115,22,0.3); }
-        .project-card:nth-child(5) .btn-demo:hover { box-shadow: 0 12px 28px rgba(249,115,22,0.45); transform: translateY(-3px); }
-        .project-card:nth-child(5):hover { border-color: #f97316; box-shadow: 0 15px 35px rgba(249,115,22,0.18); }
+        .project-card:nth-child(5) .project-img-icon i { animation: gamepadAnimate 2.5s ease-in-out infinite; display: inline-block; }
 
-        /* Custom Game Animation */
-        @keyframes gamepadAnimate {
-            0% { transform: translateY(0) scale(1) rotate(0deg); }
-            20% { transform: translateY(-4px) scale(1.1) rotate(-10deg); }
-            40% { transform: translateY(-6px) scale(1.15) rotate(10deg); }
-            60% { transform: translateY(-4px) scale(1.1) rotate(-10deg); }
-            80% { transform: translateY(0) scale(1) rotate(0deg); }
-            100% { transform: translateY(0) scale(1) rotate(0deg); }
-        }
-        .project-card:nth-child(5) .project-img-icon i {
-            animation: gamepadAnimate 2.5s ease-in-out infinite;
-            display: inline-block;
-        }
-
-        /* Skill Cards */
+        /* Skill & Timeline Colors */
         .skill-card:nth-child(1) { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.01)); border-color: rgba(16,185,129,0.3); }
         .skill-card:nth-child(1) .skill-icon { color: #10b981; }
-        .skill-card:nth-child(1) .progress-bar { background: linear-gradient(90deg, #10b981, #059669); box-shadow: 0 0 10px rgba(16,185,129,0.5); }
-        .skill-card:nth-child(1):hover { border-color: #10b981; box-shadow: 0 15px 35px rgba(16,185,129,0.2); }
-
+        .skill-card:nth-child(1) .progress-bar { background: linear-gradient(90deg, #10b981, #059669); }
         .skill-card:nth-child(2) { background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.01)); border-color: rgba(239,68,68,0.3); }
         .skill-card:nth-child(2) .skill-icon { color: #ef4444; }
-        .skill-card:nth-child(2) .progress-bar { background: linear-gradient(90deg, #ef4444, #b91c1c); box-shadow: 0 0 10px rgba(239,68,68,0.5); }
-        .skill-card:nth-child(2):hover { border-color: #ef4444; box-shadow: 0 15px 35px rgba(239,68,68,0.2); }
-
-        /* Edu Cards */
+        .skill-card:nth-child(2) .progress-bar { background: linear-gradient(90deg, #ef4444, #b91c1c); }
         .timeline-item.right .edu-card { background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.01)); border-color: rgba(16,185,129,0.3); }
-        .timeline-item.right .edu-card .cgpa-num { color: #10b981; }
-        .timeline-item.right .edu-card .college-name { color: #10b981; }
-        .timeline-item.right .edu-card:hover { border-color: #10b981; box-shadow: 0 15px 35px rgba(16,185,129,0.2); }
-
+        .timeline-item.right .edu-card .cgpa-num, .timeline-item.right .edu-card .college-name { color: #10b981; }
         .timeline-item.left .edu-card { background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.01)); border-color: rgba(239,68,68,0.3); }
-        .timeline-item.left .edu-card .cgpa-num { color: #ef4444; }
-        .timeline-item.left .edu-card .college-name { color: #ef4444; }
-        .timeline-item.left .edu-card:hover { border-color: #ef4444; box-shadow: 0 15px 35px rgba(239,68,68,0.2); }
+        .timeline-item.left .edu-card .cgpa-num, .timeline-item.left .edu-card .college-name { color: #ef4444; }
 
         /* --- Footer Styles --- */
         footer {
@@ -610,11 +553,6 @@
         /* ========================================= */
         /* --- MOBILE RESPONSIVE SCROLL FIXES --- */
         /* ========================================= */
-        @media (max-width: 1100px) { 
-            .home { gap: 2rem; } 
-            .home-img { width: 300px; } 
-        }
-        
         @media (max-width: 992px) {
             header { padding: 1rem 5%; }
             .hamburger { display: block; }
@@ -643,11 +581,10 @@
         @media (max-width: 768px) {
             :root { --section-padding: 80px 5% 60px; }
             
-            /* CRUCIAL MOBILE SCROLL PERFORMANCE FIXES */
-            /* Remove heavy backdrop-filters on mobile to eliminate scroll lag */
+            /* SECURE RENDERING FIX FOR MOBILE */
             .project-card, .edu-card, .skill-card, .info-card, .stat-card, .contact-container, footer {
                 backdrop-filter: none !important;
-                background: var(--card-bg-mobile) !important; /* Solid fallback */
+                background: var(--card-bg-mobile) !important; 
             }
             header { backdrop-filter: none !important; background: var(--bg-header) !important; }
             
@@ -853,13 +790,11 @@
                     <span class="tech-pill">CSS3</span>
                     <span class="tech-pill">JavaScript</span>
                     <span class="tech-pill">Netlify</span>
-                    
                 </div>
                 <div style="display: flex; gap: 1rem;">
                     <a href="javascript:void(0)" onclick="openGameModal()" class="btn-project btn-demo"><i class="fas fa-play"></i> Play Games</a>
                 </div>
             </div>
-            
         </div>
 
         <div style="text-align: center; margin-top: 3rem;" class="reveal delay-2">
@@ -1004,15 +939,16 @@
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
 
     <script>
-        // --- SECURE LENIS INITIALIZATION FOR MOBILE ---
+        // --- FIXED: HIGH PERFORMANCE LENIS INITIALIZATION FOR MOBILE ---
         let lenis;
         try {
             if (typeof Lenis !== 'undefined') {
                 lenis = new Lenis({
-                    duration: 0.8,
+                    duration: 0.9,
                     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                    smoothTouch: true, // ENABLES smooth scrolling natively on touch devices
-                    touchMultiplier: 2.5,
+                    smoothTouch: true, // Native touch routing maps smoothly to engine loop
+                    touchMultiplier: 1.8,
+                    infinite: false
                 });
 
                 function raf(time) {
@@ -1022,7 +958,7 @@
                 requestAnimationFrame(raf);
             }
         } catch (e) {
-            console.warn("Smooth scroll library failed to load, continuing with native scroll.");
+            console.warn("Lenis library fallbacked to browser architecture.");
         }
 
         document.querySelectorAll('nav a, a[href^="#"]').forEach(anchor => {
@@ -1110,7 +1046,7 @@
             }
         }
 
-        // --- OPTIMIZED PARALLAX ENGINE (MOBILE DISABLED FOR PERFORMANCE) ---
+        // --- PARALLAX ENGINE (MUTED ON MOBILE) ---
         let targetX = 0, targetY = 0;
         let currentX = 0, currentY = 0;
         let targetTiltX = 0, currentTiltX = 0;
@@ -1123,7 +1059,7 @@
         let mouseMoveThrottle = false;
 
         document.addEventListener('mousemove', (e) => {
-            if (window.innerWidth <= 768) return; // Ignore on mobile
+            if (window.innerWidth <= 768) return; 
             if (mouseMoveThrottle) return;
             mouseMoveThrottle = true;
             setTimeout(() => { mouseMoveThrottle = false; }, 32);
@@ -1136,7 +1072,7 @@
         function animateParallax() {
             if (window.innerWidth <= 768) {
                 isMoving = false;
-                return; // DISABLE HEAVY GPU PARALLAX MATH ON MOBILE 
+                return; 
             }
 
             scrollVelocity = currentScrollY - lastScrollY;
@@ -1175,7 +1111,6 @@
 
         animateParallax();
 
-        // Scroll listener fallback for Parallax & Header
         function handleScroll() {
             currentScrollY = window.scrollY;
 
@@ -1201,7 +1136,6 @@
         // --- IntersectionObserver for Nav ---
         const navLinks = document.querySelectorAll('nav a');
         const sections = document.querySelectorAll('section');
-        
         const observerOptions = { root: null, rootMargin: '-20% 0px -60% 0px', threshold: 0 };
 
         const sectionObserver = new IntersectionObserver((entries) => {
@@ -1291,7 +1225,7 @@
             }, 1000);
         });
 
-        // --- Initialization ---
+        // --- Alignment & Setup ---
         (function init() {
             const allReveal = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
             allReveal.forEach(el => revealObserver.observe(el));
@@ -1315,7 +1249,7 @@
         let resizeTimer;
         window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawGrid, 200); });
 
-        // --- Double Tap Logo = Cycle Cube RGB Color Theme ---
+        // --- Color Cycle Events ---
         const rgbThemes = [
             { top: 'rgba(0,210,255,0.25)',   left: 'rgba(0,210,255,0.10)',   right: 'rgba(0,210,255,0.05)',   dim: 'rgba(0,210,255,0.3)',    glow: 'rgba(0,210,255,1)'    },
             { top: 'rgba(157,80,187,0.25)',  left: 'rgba(157,80,187,0.10)',  right: 'rgba(157,80,187,0.05)',  dim: 'rgba(157,80,187,0.3)',   glow: 'rgba(157,80,187,1)'   },
@@ -1344,7 +1278,6 @@
             lastTap = now;
         });
 
-        // --- Footer Double Tap = Cycle Cube Border Color ---
         const borderColors = [
             { dim: 'rgba(0,210,255,0.05)', glow: 'rgba(0,210,255,0.6)' },
             { dim: 'rgba(157,80,187,0.3)', glow: 'rgba(157,80,187,1)' },
@@ -1390,8 +1323,6 @@
     <script>
         (function() {
             const block = document.getElementById('devtools-block');
-            let devopen = false;
-
             document.addEventListener('contextmenu', e => e.preventDefault());
             document.addEventListener('keydown', e => {
                 if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) {
