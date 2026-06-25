@@ -24,7 +24,6 @@
             --bg-body: #020205;
             --bg-header: rgba(2, 2, 5, 0.85);
             --card-bg: rgba(255, 255, 255, 0.03);
-            --card-bg-mobile: rgba(15, 15, 20, 0.95); /* Solid fallback for mobile */
             --text-main: #f0f0f5;
             --text-sub: #a0a0b5;
             --border-color: rgba(0, 210, 255, 0.15);
@@ -47,7 +46,6 @@
             --bg-body: #cbd5e1;
             --bg-header: rgba(186, 197, 213, 0.92);
             --card-bg: rgba(148, 163, 184, 0.35);
-            --card-bg-mobile: rgba(200, 210, 225, 0.95); /* Solid fallback for mobile */
             --text-main: #0f172a;
             --text-sub: #334155;
             --border-color: rgba(3, 105, 161, 0.2);
@@ -107,8 +105,9 @@
             box-shadow: 0 8px 20px rgba(249,115,22,0.3); transform: translateY(-3px);
         }
 
-        /* FIXED: REMOVED OVERSCROLL-BEHAVIOR DETACHMENT CRASHING MOBILE BROWSERS */
-        html {
+        /* STRICT MOBILE OVERFLOW PREVENTION */
+        html { 
+            overscroll-behavior: none; 
             overflow-x: hidden;
             width: 100vw;
         }
@@ -125,14 +124,13 @@
         }
 
         /* --- Hide Scrollbar --- */
-        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
-        html, body { scrollbar-width: none; -ms-overflow-style: none; }
+        ::-webkit-scrollbar { display: none; }
+        * { scrollbar-width: none; -ms-overflow-style: none; }
 
         #scroll-progress {
             position: fixed; top: 0; left: 0; width: 0%; height: 4px;
             background: var(--gradient-main); z-index: 2001;
             box-shadow: 0 0 10px var(--primary-color);
-            will-change: width;
         }
 
         /* ========================================= */
@@ -184,7 +182,7 @@
             stroke-linejoin: round;
             transition: fill 0.4s ease; 
             shape-rendering: optimizeSpeed; 
-            transform: translateZ(0); 
+            transform: translateZ(0); /* Hardware Acceleration */
             fill: var(--glass-top);
         }
 
@@ -196,8 +194,8 @@
 
         .edge-breathe {
             stroke: var(--particle-dim);
-            stroke-width: 1.5px; 
-            will-change: opacity, stroke; 
+            stroke-width: 1.5px; /* Static stroke width */
+            will-change: opacity, stroke; /* Tells GPU to handle this smoothly */
         }
 
         /* --- Navigation --- */
@@ -244,6 +242,7 @@
         .reveal-left  { transform: translateX(-80px) scale(0.97); }
         .reveal-right { transform: translateX(80px)  scale(0.97); }
 
+        /* Animate IN - smooth spring easing */
         .reveal.show, .reveal-left.show, .reveal-right.show {
             opacity: 1;
             transform: translate(0, 0) scale(1);
@@ -257,13 +256,10 @@
         .delay-4 { transition-delay: 0.24s !important; }
         .delay-5 { transition-delay: 0.32s !important; } 
 
-        /* --- Card Styles --- */
-        .project-card, .edu-card, .skill-card {
-            background: var(--card-bg); 
-            backdrop-filter: blur(6px); 
-            border: 1px solid var(--border-color);
-            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
-        }
+        /* --- Card Hovers --- */
+        .project-card { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease; }
+        .edu-card     { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease; }
+        .skill-card   { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease; }
 
         .project-card:hover, .edu-card:hover, .skill-card:hover {
             transform: translateY(-8px) scale(1.015);
@@ -291,6 +287,7 @@
         .home-content { z-index: 10; max-width: 600px; }
         .home-content h1 { font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; word-break: break-word; }
         
+        /* --- Animated Glassy Gradient Name --- */
         .home-content h1 span { 
             background: linear-gradient(
                 to right, 
@@ -308,6 +305,18 @@
                     drop-shadow(0 0 30px rgba(157, 80, 187, 0.2));
             animation: textFlow 4s ease-in-out infinite; 
             display: inline-block;
+        }
+
+        @keyframes textFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .home-content h3 { font-size: clamp(1.1rem, 2.5vw, 2.2rem); margin: 1rem 0; font-weight: 600; color: var(--primary-color); min-height: 1.2em; }
@@ -335,7 +344,9 @@
         }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0, 210, 255, 0.4); }
 
-        /* --- Hero Image --- */
+        /* ========================================= */
+        /* --- PROFESSIONAL 3D HERO IMAGE --- */
+        /* ========================================= */
         .home-img { 
             position: relative; 
             width: clamp(260px, 30vw, 380px); 
@@ -370,6 +381,7 @@
             border-radius: 20px; 
         }
 
+
         /* --- Section Titles --- */
         .section-header { text-align: center; margin-bottom: clamp(3rem, 8vw, 5rem); }
         .section-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; }
@@ -392,8 +404,8 @@
         /* --- Projects --- */
         .projects-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 700px; margin: 0 auto; width: 100%; }
         .project-card {
-            border-radius: 35px; padding: clamp(1.5rem, 5vw, 3rem);
-            position: relative; overflow: hidden; display: flex; flex-direction: column; 
+            background: var(--card-bg); border-radius: 35px; padding: clamp(1.5rem, 5vw, 3rem);
+            border: 1px solid var(--border-color); position: relative; overflow: hidden; display: flex; flex-direction: column; backdrop-filter: blur(6px);
         }
         .project-status {
             position: absolute; top: 20px; right: 20px; display: flex; align-items: center; gap: 6px;
@@ -401,6 +413,7 @@
             border-radius: 20px; font-size: 0.65rem; font-weight: 700; color: var(--primary-color); text-transform: uppercase;
         }
         .status-dot { width: 6px; height: 6px; background: var(--primary-color); border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
         .project-img-icon {
             width: 60px; height: 60px; background: rgba(0, 210, 255, 0.1); border-radius: 18px;
             display: flex; align-items: center; justify-content: center; color: var(--primary-color);
@@ -428,7 +441,7 @@
         .left .timeline-year { text-align: left; color: #ef4444; }
         .right .timeline-year { text-align: right; color: #10b981; }
         .timeline-dot { position: absolute; width: 14px; height: 14px; background: var(--primary-color); border-radius: 50%; left: 50%; transform: translateX(-50%); z-index: 5; }
-        .edu-card { padding: clamp(1.2rem, 3vw, 2.5rem); border-radius: 20px; position: relative; }
+        .edu-card { background: var(--card-bg); padding: clamp(1.2rem, 3vw, 2.5rem); border-radius: 20px; border: 1px solid var(--border-color); position: relative; backdrop-filter: blur(6px); }
         .edu-card h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); margin-bottom: 0.4rem; }
         .college-name { display: block; font-size: 0.75rem; font-weight: 800; color: var(--primary-color); text-transform: uppercase; margin-bottom: 1rem; }
         .edu-desc { font-size: 0.85rem; line-height: 1.6; color: var(--text-sub); margin-bottom: 1.5rem; }
@@ -438,7 +451,7 @@
 
         /* --- Skills --- */
         .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-        .skill-card { padding: 1.5rem; border-radius: 18px; }
+        .skill-card { background: var(--card-bg); padding: 1.5rem; border-radius: 18px; border: 1px solid var(--border-color); backdrop-filter: blur(6px); }
         .skill-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
         .skill-icon { font-size: 1.5rem; color: var(--primary-color); }
         .skill-name { font-weight: 700; font-size: 1rem; }
@@ -472,29 +485,35 @@
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        /* Colors */
+        /* --- About Section Colors --- */
         .info-card:nth-child(1) { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.02)); border-color: rgba(16,185,129,0.3); }
         .info-card:nth-child(1) .label { color: #10b981; }
+
         .info-card:nth-child(2) { background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.02)); border-color: rgba(239,68,68,0.3); }
         .info-card:nth-child(2) .label { color: #ef4444; }
+
         .stat-card:nth-child(1) { background: linear-gradient(135deg, rgba(234,179,8,0.1), rgba(234,179,8,0.02)); border-color: rgba(234,179,8,0.3); }
         .stat-card:nth-child(1) .number { background: linear-gradient(135deg, #eab308, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .stat-card:nth-child(1):hover { border-color: #eab308; box-shadow: 0 15px 35px rgba(234,179,8,0.2); }
+
         .stat-card:nth-child(2) { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.02)); border-color: rgba(16,185,129,0.3); }
         .stat-card:nth-child(2) .number { background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .stat-card:nth-child(2):hover { border-color: #10b981; box-shadow: 0 15px 35px rgba(16,185,129,0.2); }
 
-        /* Project Grid Colors */
+        /* Project Cards */
         .project-card:nth-child(1) { background: linear-gradient(135deg, rgba(0,210,255,0.08), rgba(0,210,255,0.02)); border-color: rgba(0,210,255,0.25); }
         .project-card:nth-child(1) .project-img-icon { background: rgba(0,210,255,0.12); color: #00d2ff; }
+
         .project-card:nth-child(2) { background: linear-gradient(135deg, rgba(157,80,187,0.1), rgba(157,80,187,0.02)); border-color: rgba(157,80,187,0.3); }
         .project-card:nth-child(2) .project-img-icon { background: rgba(157,80,187,0.12); color: #9d50bb; }
         .project-card:nth-child(2) .project-status { color: #9d50bb; background: rgba(157,80,187,0.08); border-color: rgba(157,80,187,0.2); }
         .project-card:nth-child(2) .status-dot { background: #9d50bb; }
+
         .project-card:nth-child(3) { background: linear-gradient(135deg, rgba(247,154,211,0.08), rgba(247,154,211,0.02)); border-color: rgba(247,154,211,0.25); }
         .project-card:nth-child(3) .project-img-icon { background: rgba(247,154,211,0.12); color: #f79ad3; }
         .project-card:nth-child(3) .project-status { color: #f79ad3; background: rgba(247,154,211,0.08); border-color: rgba(247,154,211,0.2); }
         .project-card:nth-child(3) .status-dot { background: #f79ad3; }
+
         .project-card:nth-child(4) { background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02)); border-color: rgba(16,185,129,0.25); }
         .project-card:nth-child(4) .project-img-icon { background: rgba(16,185,129,0.12); color: #10b981; }
         .project-card:nth-child(4) .project-status { color: #10b981; background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.2); }
@@ -505,54 +524,70 @@
         .project-card:nth-child(3) .btn-demo { background: linear-gradient(135deg, #f79ad3, #e040a0); box-shadow: 0 8px 20px rgba(247,154,211,0.3); }
         .project-card:nth-child(4) .btn-demo { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16,185,129,0.3); }
 
+        .project-card:nth-child(1) .btn-demo:hover { box-shadow: 0 12px 28px rgba(0,210,255,0.45); transform: translateY(-3px); }
+        .project-card:nth-child(2) .btn-demo:hover { box-shadow: 0 12px 28px rgba(157,80,187,0.45); transform: translateY(-3px); }
+        .project-card:nth-child(3) .btn-demo:hover { box-shadow: 0 12px 28px rgba(247,154,211,0.45); transform: translateY(-3px); }
+        .project-card:nth-child(4) .btn-demo:hover { box-shadow: 0 12px 28px rgba(16,185,129,0.45); transform: translateY(-3px); }
+        .project-card:nth-child(1):hover { border-color: #00d2ff; box-shadow: 0 15px 35px rgba(0,210,255,0.18); }
+        .project-card:nth-child(2):hover { border-color: #9d50bb; box-shadow: 0 15px 35px rgba(157,80,187,0.18); }
+        .project-card:nth-child(3):hover { border-color: #f79ad3; box-shadow: 0 15px 35px rgba(247,154,211,0.18); }
+        .project-card:nth-child(4):hover { border-color: #10b981; box-shadow: 0 15px 35px rgba(16,185,129,0.18); }
+
+        /* --- 5th Project Card Styles (Game Card) --- */
         .project-card:nth-child(5) { background: linear-gradient(135deg, rgba(249,115,22,0.08), rgba(249,115,22,0.02)); border-color: rgba(249,115,22,0.25); }
         .project-card:nth-child(5) .project-img-icon { background: rgba(249,115,22,0.12); color: #f97316; }
         .project-card:nth-child(5) .project-status { color: #f97316; background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.2); }
         .project-card:nth-child(5) .status-dot { background: #f97316; }
         .project-card:nth-child(5) .btn-demo { background: linear-gradient(135deg, #f97316, #ea580c); box-shadow: 0 8px 20px rgba(249,115,22,0.3); }
-        .project-card:nth-child(5) .project-img-icon i { animation: gamepadAnimate 2.5s ease-in-out infinite; display: inline-block; }
+        .project-card:nth-child(5) .btn-demo:hover { box-shadow: 0 12px 28px rgba(249,115,22,0.45); transform: translateY(-3px); }
+        .project-card:nth-child(5):hover { border-color: #f97316; box-shadow: 0 15px 35px rgba(249,115,22,0.18); }
 
-        /* Skill & Timeline Colors */
+        /* Custom Game Animation */
+        @keyframes gamepadAnimate {
+            0% { transform: translateY(0) scale(1) rotate(0deg); }
+            20% { transform: translateY(-4px) scale(1.1) rotate(-10deg); }
+            40% { transform: translateY(-6px) scale(1.15) rotate(10deg); }
+            60% { transform: translateY(-4px) scale(1.1) rotate(-10deg); }
+            80% { transform: translateY(0) scale(1) rotate(0deg); }
+            100% { transform: translateY(0) scale(1) rotate(0deg); }
+        }
+        .project-card:nth-child(5) .project-img-icon i {
+            animation: gamepadAnimate 2.5s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        /* Skill Cards */
         .skill-card:nth-child(1) { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.01)); border-color: rgba(16,185,129,0.3); }
         .skill-card:nth-child(1) .skill-icon { color: #10b981; }
-        .skill-card:nth-child(1) .progress-bar { background: linear-gradient(90deg, #10b981, #059669); }
+        .skill-card:nth-child(1) .progress-bar { background: linear-gradient(90deg, #10b981, #059669); box-shadow: 0 0 10px rgba(16,185,129,0.5); }
+        .skill-card:nth-child(1):hover { border-color: #10b981; box-shadow: 0 15px 35px rgba(16,185,129,0.2); }
+
         .skill-card:nth-child(2) { background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.01)); border-color: rgba(239,68,68,0.3); }
         .skill-card:nth-child(2) .skill-icon { color: #ef4444; }
-        .skill-card:nth-child(2) .progress-bar { background: linear-gradient(90deg, #ef4444, #b91c1c); }
+        .skill-card:nth-child(2) .progress-bar { background: linear-gradient(90deg, #ef4444, #b91c1c); box-shadow: 0 0 10px rgba(239,68,68,0.5); }
+        .skill-card:nth-child(2):hover { border-color: #ef4444; box-shadow: 0 15px 35px rgba(239,68,68,0.2); }
+
+        /* Edu Cards */
         .timeline-item.right .edu-card { background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.01)); border-color: rgba(16,185,129,0.3); }
-        .timeline-item.right .edu-card .cgpa-num, .timeline-item.right .edu-card .college-name { color: #10b981; }
+        .timeline-item.right .edu-card .cgpa-num { color: #10b981; }
+        .timeline-item.right .edu-card .college-name { color: #10b981; }
+        .timeline-item.right .edu-card:hover { border-color: #10b981; box-shadow: 0 15px 35px rgba(16,185,129,0.2); }
+
         .timeline-item.left .edu-card { background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.01)); border-color: rgba(239,68,68,0.3); }
-        .timeline-item.left .edu-card .cgpa-num, .timeline-item.left .edu-card .college-name { color: #ef4444; }
-
-        /* --- Footer Styles --- */
-        footer {
-            padding: 2rem 5%;
-            text-align: center;
-            border-top: 1px solid var(--border-color);
-            background: rgba(2, 2, 5, 0.4); 
-            backdrop-filter: blur(8px);
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-            z-index: 10;
-        }
-        
-        footer p {
-            color: var(--text-sub);
-            font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            margin: 0;
-        }
-        
-        footer p span {
-            color: var(--primary-color);
-            font-weight: 700;
-        }
+        .timeline-item.left .edu-card .cgpa-num { color: #ef4444; }
+        .timeline-item.left .edu-card .college-name { color: #ef4444; }
+        .timeline-item.left .edu-card:hover { border-color: #ef4444; box-shadow: 0 15px 35px rgba(239,68,68,0.2); }
+        footer p { color: var(--text-sub); font-size: 0.85rem; }
+        footer { cursor: pointer; user-select: none; }
 
         /* ========================================= */
-        /* --- MOBILE RESPONSIVE SCROLL FIXES --- */
+        /* --- MOBILE RESPONSIVE FIXES --- */
         /* ========================================= */
+        @media (max-width: 1100px) { 
+            .home { gap: 2rem; } 
+            .home-img { width: 300px; } 
+        }
+        
         @media (max-width: 992px) {
             header { padding: 1rem 5%; }
             .hamburger { display: block; }
@@ -565,37 +600,42 @@
             nav.mobile-active { right: 0; }
             nav a { margin: 1.2rem 0; font-size: 1.2rem; width: 100%; text-align: center; }
             
+            /* Stack home section */
             .home { flex-direction: column-reverse; text-align: center; padding-top: 140px; }
             .home-content { display: flex; flex-direction: column; align-items: center; }
             .home-content p { margin-left: auto; margin-right: auto; }
             .social-icons, .btn-container { justify-content: center; }
+            
+            /* Center elements */
             .about-grid { grid-template-columns: 1fr; text-align: center; }
             .contact-info-grid { justify-content: center; }
             .stat-container { max-width: 500px; margin: 0 auto; }
             .contact-container { grid-template-columns: 1fr; }
-            
-            .home-img { perspective: none; }
-            .home-img-inner { transform: none !important; transform-style: flat; }
         }
         
         @media (max-width: 768px) {
             :root { --section-padding: 80px 5% 60px; }
             
-            /* SECURE RENDERING FIX FOR MOBILE */
-            .project-card, .edu-card, .skill-card, .info-card, .stat-card, .contact-container, footer {
-                backdrop-filter: none !important;
-                background: var(--card-bg-mobile) !important; 
+            /* Fix Image overflow on mobile */
+            .home-img { 
+                max-width: 280px; 
+                width: 90%; 
+                margin: 0 auto; 
             }
-            header { backdrop-filter: none !important; background: var(--bg-header) !important; }
             
-            .home-img { max-width: 280px; width: 90%; margin: 0 auto; }
+            /* Fix Timeline Overflow */
             .timeline::after { left: 20px; }
             .timeline-item, .timeline-item.right { flex-direction: column; align-items: flex-start; margin-bottom: 40px; }
             .timeline-content-wrapper { width: 100%; padding-left: 45px; }
             .timeline-year { width: 100%; padding-left: 45px; margin-bottom: 8px; font-size: 0.9rem; text-align: left !important; }
             .timeline-dot { left: 20px; transform: translateX(-50%); }
+            
             .edu-card { width: 100%; padding: 1.5rem; }
-            footer { padding: 1.5rem 5%; }
+        }
+        
+        @media (max-width: 992px) {
+            .home-img { perspective: none; }
+            .home-img-inner { transform: none !important; transform-style: flat; }
         }
 
         @media (max-width: 480px) {
@@ -657,8 +697,10 @@
                 <div class="image-frame">
                     <img src="guru.jpg" alt="Guruprasath K Profile">
                 </div>
+                
             </div>
         </div>
+
     </section>
 
     <section id="about">
@@ -790,15 +832,17 @@
                     <span class="tech-pill">CSS3</span>
                     <span class="tech-pill">JavaScript</span>
                     <span class="tech-pill">Netlify</span>
+                    
                 </div>
                 <div style="display: flex; gap: 1rem;">
                     <a href="javascript:void(0)" onclick="openGameModal()" class="btn-project btn-demo"><i class="fas fa-play"></i> Play Games</a>
                 </div>
             </div>
+            
         </div>
 
         <div style="text-align: center; margin-top: 3rem;" class="reveal delay-2">
-            <a href="https://github.com/Guru-9403" target="_blank" class="btn" style="background: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-main);">
+            <a href="https://github.com/Guru-9403" target="_blank" class="btn" style="background: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-main); backdrop-filter: blur(5px);">
                 <i class="fab fa-github" style="margin-right: 10px;"></i> More on GitHub
             </a>
         </div>
@@ -915,40 +959,36 @@
         </div>
     </section>
 
-    <!-- Game Modal -->
-    <div id="gameModal" class="modal-overlay">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeGameModal()">&times;</span>
-            <h3>Select a Game</h3>
-            <div class="game-options">
-                <a href="https://spaceasteroidshooter.netlify.app/" target="_blank" class="game-btn">
-                    <i class="fas fa-space-shuttle"></i> <b>Asteroidshooter</b>
-                </a>
-                <a href="https://spacexsurvivor.netlify.app/" target="_blank" class="game-btn">
-                    <i class="fas fa-space-shuttle"></i> <b>Spacexsurvivor</b>
-                </a>
+    <footer id="footer-trigger" title="Double tap to change cube border color">
+        <div id="gameModal" class="modal-overlay">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeGameModal()">&times;</span>
+                <h3>Select a Game</h3>
+                <div class="game-options">
+                    <a href="https://spaceasteroidshooter.netlify.app/" target="_blank" class="game-btn">
+                        <i class="fas fa-space-shuttle"></i> <b>Asteroidshooter</b>
+                    </a>
+                    <a href="https://spacexsurvivor.netlify.app/" target="_blank" class="game-btn">
+                        <i class="fas fa-space-shuttle"></i> <b>Spacexsurvivor</b>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-
-    <!-- Clean, Separated Footer -->
-    <footer id="footer-trigger" title="Double tap to change cube border color">
-        <p>Developed by <span>Guru</span> <i class="fas fa-bolt" style="color:var(--primary-color)"></i></p>
+        <p>&copy; @ 2026 Guruprasath K. <i class="fas fa-bolt" style="color:var(--primary-color)"></i> for the modern web.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
 
     <script>
-        // --- FIXED: HIGH PERFORMANCE LENIS INITIALIZATION FOR MOBILE ---
+        // --- SAFE LENIS INITIALIZATION ---
         let lenis;
         try {
             if (typeof Lenis !== 'undefined') {
                 lenis = new Lenis({
-                    duration: 0.9,
+                    duration: 0.7,
                     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                    smoothTouch: true, // Native touch routing maps smoothly to engine loop
-                    touchMultiplier: 1.8,
-                    infinite: false
+                    smoothTouch: false,
+                    touchMultiplier: 2,
                 });
 
                 function raf(time) {
@@ -958,7 +998,7 @@
                 requestAnimationFrame(raf);
             }
         } catch (e) {
-            console.warn("Lenis library fallbacked to browser architecture.");
+            console.warn("Smooth scroll library failed to load, continuing with native scroll.");
         }
 
         document.querySelectorAll('nav a, a[href^="#"]').forEach(anchor => {
@@ -985,12 +1025,16 @@
         if(profileImgContainer && profileImgInner && window.innerWidth > 992) {
             profileImgContainer.addEventListener('mousemove', (e) => {
                 const rect = profileImgContainer.getBoundingClientRect();
+                
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
+                
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
+                
                 const rotateX = ((y - centerY) / centerY) * -15; 
                 const rotateY = ((x - centerX) / centerX) * 15;
+
                 profileImgInner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
             });
 
@@ -1001,6 +1045,7 @@
 
         // --- HONEYCOMB GLASS PARTICLES ---
         const svgContainer = document.getElementById('cyber-grid-container');
+        
         const hexSize = 130; 
         const hexWidth = Math.sqrt(3) * hexSize;
         const hexHeight = 2 * hexSize;
@@ -1017,13 +1062,23 @@
         function createParticle(cx, cy) {
             const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
             group.classList.add('cyber-cube');
+            
             group.style.transformOrigin = `${cx}px ${cy}px`;
             group.style.animationDelay = `-${Math.random() * 8}s`;
             
-            const R = hexSize * 0.9; 
+            // Calculate flat hexagon points based on the center
+            const R = hexSize * 0.9; // Scale down slightly to create a gap between hexagons
             const w = R * Math.sqrt(3) / 2;
+            
             const hex = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-            const pts = `${cx},${cy - R} ${cx + w},${cy - R/2} ${cx + w},${cy + R/2} ${cx},${cy + R} ${cx - w},${cy + R/2} ${cx - w},${cy - R/2}`;
+            const pts = `
+                ${cx},${cy - R}
+                ${cx + w},${cy - R/2}
+                ${cx + w},${cy + R/2}
+                ${cx},${cy + R}
+                ${cx - w},${cy + R/2}
+                ${cx - w},${cy - R/2}
+            `;
             hex.setAttribute("points", pts.trim());
             styleGlassPolygon(hex);
 
@@ -1046,20 +1101,20 @@
             }
         }
 
-        // --- PARALLAX ENGINE (MUTED ON MOBILE) ---
+        // --- OPTIMIZED PARALLAX ENGINE ---
         let targetX = 0, targetY = 0;
         let currentX = 0, currentY = 0;
         let targetTiltX = 0, currentTiltX = 0;
         let targetTiltY = 0, currentTiltY = 0;
         let rafId = null;
         let isMoving = false;
+
         let currentScrollY = window.scrollY;
         let lastScrollY = window.scrollY;
         let scrollVelocity = 0;
-        let mouseMoveThrottle = false;
 
+        let mouseMoveThrottle = false;
         document.addEventListener('mousemove', (e) => {
-            if (window.innerWidth <= 768) return; 
             if (mouseMoveThrottle) return;
             mouseMoveThrottle = true;
             setTimeout(() => { mouseMoveThrottle = false; }, 32);
@@ -1070,11 +1125,6 @@
         });
 
         function animateParallax() {
-            if (window.innerWidth <= 768) {
-                isMoving = false;
-                return; 
-            }
-
             scrollVelocity = currentScrollY - lastScrollY;
             lastScrollY = currentScrollY;
 
@@ -1111,6 +1161,7 @@
 
         animateParallax();
 
+        // Scroll listener fallback for Parallax & Header
         function handleScroll() {
             currentScrollY = window.scrollY;
 
@@ -1127,23 +1178,30 @@
                 header.style.padding = "1rem 8%";
             }
 
-            if (!isMoving && window.innerWidth > 768) { isMoving = true; animateParallax(); }
+            if (!isMoving) { isMoving = true; animateParallax(); }
         }
 
         if (lenis) { lenis.on('scroll', handleScroll); } 
-        else { window.addEventListener('scroll', handleScroll, { passive: true }); }
+        else { window.addEventListener('scroll', handleScroll); }
 
         // --- IntersectionObserver for Nav ---
         const navLinks = document.querySelectorAll('nav a');
         const sections = document.querySelectorAll('section');
-        const observerOptions = { root: null, rootMargin: '-20% 0px -60% 0px', threshold: 0 };
+        
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -60% 0px', 
+            threshold: 0
+        };
 
         const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     navLinks.forEach(link => {
                         link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${entry.target.id}`) { link.classList.add('active'); }
+                        if (link.getAttribute('href') === `#${entry.target.id}`) {
+                            link.classList.add('active');
+                        }
                     });
                 }
             });
@@ -1156,6 +1214,7 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const el = entry.target;
+                    el.getBoundingClientRect();
                     requestAnimationFrame(() => {
                         el.classList.add('show');
                         const bar = el.querySelector('.progress-bar');
@@ -1195,12 +1254,21 @@
             if(!display) return;
             const fullWord = typingText[wordIdx];
             
-            display.textContent = isDeleting ? fullWord.substring(0, charIdx - 1) : fullWord.substring(0, charIdx + 1);
+            display.textContent = isDeleting 
+                ? fullWord.substring(0, charIdx - 1) 
+                : fullWord.substring(0, charIdx + 1);
+            
             charIdx = isDeleting ? charIdx - 1 : charIdx + 1;
             
             let speed = isDeleting ? 50 : 100;
-            if (!isDeleting && charIdx === fullWord.length) { speed = 2000; isDeleting = true; } 
-            else if (isDeleting && charIdx === 0) { isDeleting = false; wordIdx = (wordIdx + 1) % typingText.length; speed = 500; }
+            if (!isDeleting && charIdx === fullWord.length) { 
+                speed = 2000; 
+                isDeleting = true; 
+            } else if (isDeleting && charIdx === 0) { 
+                isDeleting = false; 
+                wordIdx = (wordIdx + 1) % typingText.length; 
+                speed = 500; 
+            }
             setTimeout(type, speed);
         }
 
@@ -1225,10 +1293,13 @@
             }, 1000);
         });
 
-        // --- Alignment & Setup ---
+        // --- Initialization ---
         (function init() {
             const allReveal = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+
+            // Observe all elements
             allReveal.forEach(el => revealObserver.observe(el));
+
             type();
             drawGrid();
 
@@ -1236,6 +1307,7 @@
                 allReveal.forEach(el => {
                     const rect = el.getBoundingClientRect();
                     if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                        el.getBoundingClientRect(); 
                         requestAnimationFrame(() => {
                             el.classList.add('show');
                             const bar = el.querySelector('.progress-bar');
@@ -1246,10 +1318,14 @@
             }, 150);
         })();
 
+        // Debounced Redraw on Resize
         let resizeTimer;
-        window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawGrid, 200); });
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(drawGrid, 200); 
+        });
 
-        // --- Color Cycle Events ---
+        // --- Double Tap Logo = Cycle Cube RGB Color Theme ---
         const rgbThemes = [
             { top: 'rgba(0,210,255,0.25)',   left: 'rgba(0,210,255,0.10)',   right: 'rgba(0,210,255,0.05)',   dim: 'rgba(0,210,255,0.3)',    glow: 'rgba(0,210,255,1)'    },
             { top: 'rgba(157,80,187,0.25)',  left: 'rgba(157,80,187,0.10)',  right: 'rgba(157,80,187,0.05)',  dim: 'rgba(157,80,187,0.3)',   glow: 'rgba(157,80,187,1)'   },
@@ -1259,60 +1335,99 @@
             { top: 'rgba(239,68,68,0.25)',   left: 'rgba(239,68,68,0.10)',   right: 'rgba(239,68,68,0.05)',   dim: 'rgba(239,68,68,0.3)',    glow: 'rgba(239,68,68,1)'    },
             { top: 'rgba(255,255,255,0.06)', left: 'rgba(255,255,255,0.02)', right: 'rgba(0,0,0,0.3)',        dim: 'rgba(0,210,255,0.05)',   glow: 'rgba(0,210,255,0.6)'  },
         ];
-        let rgbIndex = 0, lastTap = 0;
-        const logoEl = document.querySelector('.logo');
+        let rgbIndex = 0;
 
         function applyRgbTheme(theme) {
             const root = document.documentElement;
-            root.style.setProperty('--glass-top', theme.top);
-            root.style.setProperty('--glass-left', theme.left);
-            root.style.setProperty('--glass-right', theme.right);
-            root.style.setProperty('--particle-dim', theme.dim);
+            root.style.setProperty('--glass-top',     theme.top);
+            root.style.setProperty('--glass-left',    theme.left);
+            root.style.setProperty('--glass-right',   theme.right);
+            root.style.setProperty('--particle-dim',  theme.dim);
             root.style.setProperty('--particle-glow', theme.glow);
         }
 
-        logoEl.addEventListener('dblclick', () => { rgbIndex = (rgbIndex + 1) % rgbThemes.length; applyRgbTheme(rgbThemes[rgbIndex]); });
+        let lastTap = 0;
+        const logoEl = document.querySelector('.logo');
+
+        logoEl.addEventListener('dblclick', () => {
+            rgbIndex = (rgbIndex + 1) % rgbThemes.length;
+            applyRgbTheme(rgbThemes[rgbIndex]);
+        });
+
         logoEl.addEventListener('touchend', (e) => {
             const now = Date.now();
-            if (now - lastTap < 300) { e.preventDefault(); rgbIndex = (rgbIndex + 1) % rgbThemes.length; applyRgbTheme(rgbThemes[rgbIndex]); }
+            if (now - lastTap < 300) {
+                e.preventDefault();
+                rgbIndex = (rgbIndex + 1) % rgbThemes.length;
+                applyRgbTheme(rgbThemes[rgbIndex]);
+            }
             lastTap = now;
         });
 
+        // --- Footer Double Tap = Cycle Cube Border Color ---
         const borderColors = [
-            { dim: 'rgba(0,210,255,0.05)', glow: 'rgba(0,210,255,0.6)' },
-            { dim: 'rgba(157,80,187,0.3)', glow: 'rgba(157,80,187,1)' },
-            { dim: 'rgba(247,154,211,0.3)', glow: 'rgba(247,154,211,1)' },
-            { dim: 'rgba(16,185,129,0.3)', glow: 'rgba(16,185,129,1)' },
-            { dim: 'rgba(234,179,8,0.3)', glow: 'rgba(234,179,8,1)' },
-            { dim: 'rgba(239,68,68,0.3)', glow: 'rgba(239,68,68,1)' },
-            { dim: 'rgba(255,255,255,0.15)', glow: 'rgba(255,255,255,0.9)' },
+            { dim: 'rgba(0,210,255,0.05)',   glow: 'rgba(0,210,255,0.6)'   }, // original cyan
+            { dim: 'rgba(157,80,187,0.3)',   glow: 'rgba(157,80,187,1)'    }, // purple
+            { dim: 'rgba(247,154,211,0.3)',  glow: 'rgba(247,154,211,1)'   }, // pink
+            { dim: 'rgba(16,185,129,0.3)',   glow: 'rgba(16,185,129,1)'    }, // green
+            { dim: 'rgba(234,179,8,0.3)',    glow: 'rgba(234,179,8,1)'     }, // yellow
+            { dim: 'rgba(239,68,68,0.3)',    glow: 'rgba(239,68,68,1)'     }, // red
+            { dim: 'rgba(255,255,255,0.15)', glow: 'rgba(255,255,255,0.9)' }, // white
         ];
-        let borderIdx = 0, lastFooterTap = 0;
+        let borderIdx = 0;
+        let lastFooterTap = 0;
         const footerEl = document.getElementById('footer-trigger');
 
         function applyBorderColor(idx) {
             const root = document.documentElement;
-            root.style.setProperty('--particle-dim', borderColors[idx].dim);
+            root.style.setProperty('--particle-dim',  borderColors[idx].dim);
             root.style.setProperty('--particle-glow', borderColors[idx].glow);
         }
 
-        footerEl.addEventListener('dblclick', () => { borderIdx = (borderIdx + 1) % borderColors.length; applyBorderColor(borderIdx); });
+        footerEl.addEventListener('dblclick', () => {
+            borderIdx = (borderIdx + 1) % borderColors.length;
+            applyBorderColor(borderIdx);
+        });
+
         footerEl.addEventListener('touchend', (e) => {
             const now = Date.now();
-            if (now - lastFooterTap < 300) { e.preventDefault(); borderIdx = (borderIdx + 1) % borderColors.length; applyBorderColor(borderIdx); }
+            if (now - lastFooterTap < 300) {
+                e.preventDefault();
+                borderIdx = (borderIdx + 1) % borderColors.length;
+                applyBorderColor(borderIdx);
+            }
             lastFooterTap = now;
         });
     </script>
 
     <style>
         #devtools-block {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #020205; z-index: 99999; justify-content: center; align-items: center;
-            flex-direction: column; gap: 1.5rem;
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #020205;
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 1.5rem;
         }
         #devtools-block.show { display: flex; }
-        #devtools-block img { width: 500px; height: 500px; object-fit: cover; border-radius: 16px; }
-        #devtools-block p { color: #00d2ff; font-family: 'Poppins', sans-serif; font-size: clamp(1rem, 2.5vw, 1.4rem); font-weight: 700; letter-spacing: 2px; text-align: center; }
+        #devtools-block img {
+            width: 500px;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+        #devtools-block p {
+            color: #00d2ff;
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-align: center;
+        }
     </style>
 
     <div id="devtools-block">
@@ -1323,9 +1438,33 @@
     <script>
         (function() {
             const block = document.getElementById('devtools-block');
+            let devopen = false;
+
+            function checkDevTools() {
+                const threshold = 160;
+                const widthDiff  = window.outerWidth  - window.innerWidth  > threshold;
+                const heightDiff = window.outerHeight - window.innerHeight > threshold;
+                if (widthDiff || heightDiff) {
+                    if (!devopen) { devopen = true; block.classList.add('show'); }
+                } else {
+                    if (devopen)  { devopen = false; block.classList.remove('show'); }
+                }
+            }
+
+            // --- DEV TOOLS BLOCKER TEMPORARILY DISABLED FOR DEBUGGING ---
+            // If you want to block inspect element again later, remove the "//" from the line below:
+            // setInterval(checkDevTools, 500);
+
+            // Block right click (Currently Active)
             document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U (Currently Active)
             document.addEventListener('keydown', e => {
-                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) {
+                if (
+                    e.key === 'F12' ||
+                    (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
+                    (e.ctrlKey && e.key.toUpperCase() === 'U')
+                ) {
                     e.preventDefault();
                     block.classList.add('show');
                     setTimeout(() => block.classList.remove('show'), 3000);
@@ -1337,18 +1476,23 @@
         function openGameModal() {
             const modal = document.getElementById('gameModal');
             modal.style.display = 'flex';
+            // Small delay to allow CSS to register display:flex before adding opacity
             setTimeout(() => modal.classList.add('show'), 10);
         }
 
         function closeGameModal() {
             const modal = document.getElementById('gameModal');
             modal.classList.remove('show');
+            // Wait for fade out animation to finish before hiding completely
             setTimeout(() => modal.style.display = 'none', 300);
         }
 
+        // Close the pop-up if the user clicks outside the box
         window.addEventListener('click', function(event) {
             const modal = document.getElementById('gameModal');
-            if (event.target === modal) { closeGameModal(); }
+            if (event.target === modal) {
+                closeGameModal();
+            }
         });
     </script>
 </body>
